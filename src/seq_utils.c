@@ -5,6 +5,7 @@
 #include "seq_utils.h"
 #define MINF -1.0/0.0
 #define MAX_CHAR 100000
+#define MAX_NUMBERS 100000
 
 // macro max
 #define MAX(x, y) (x->score >= y->score ? x:y)
@@ -519,6 +520,41 @@ fasta_seq_p read_fasta(char* fasta_file_str) {
   cur_seq->name = name;
   cur_seq->seq = seq;
   return cur_seq;
+}
+
+// read a sequence weight file
+weight_seq_p read_weights(char* weight_file_str, int len_seq) {
+  FILE *weight_file;
+  char line[MAX_CHAR];
+  char* name = (char*)malloc(sizeof(char)*MAX_CHAR);
+  int* weight = (int*)malloc(sizeof(int)*MAX_NUMBERS);
+  int count = 0;
+  weight_seq_p cur_weight = (weight_seq_p)malloc(sizeof(weight_seq));
+
+  if ((weight_file = fopen(weight_file_str, "r")) == NULL) {
+    printf("Error! opening file");
+    exit(1);
+  }
+  while(fgets(line, MAX_CHAR, weight_file) != NULL) {
+    if (line[0] != '>') {
+      char *token = strtok(line, " ");
+      while (token != NULL) {
+        weight[count++] = atoi(token);
+      }
+    } else {
+      strcpy(name, line);
+      name[strcspn(name, "\n")] = 0;
+    }
+  }
+  fclose(weight_file);
+  if (count != len_seq) {
+    printf("Error at line %d: length of weight not equal to length of sequence\n", count);
+    return 1;
+  } else {
+    cur_weight->name = name;
+    cur_weight->weight = weight;
+    return cur_weight;
+  }
 }
 
 // return a random integer in [from_int; to_int] interval

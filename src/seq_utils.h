@@ -17,6 +17,13 @@ typedef struct {
 } fasta_seq;
 typedef fasta_seq *fasta_seq_p;
 
+//save sequence positional weights
+typedef struct {
+  char* name;
+  int* weight;
+} weight_seq;
+typedef weight_seq *weight_seq_p;
+
 // pair of residues
 typedef struct {
   Aminoacid x;
@@ -134,6 +141,9 @@ int convert_matrix(char* matrix_str);
 
 // read a fasta file
 fasta_seq_p read_fasta(char* fasta_file_str);
+
+// read a weight file
+weight_seq_p read_weight(char* weight_file_str);
 
 // progress infos
 void printProgress (int step, int traj_len);

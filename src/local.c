@@ -46,6 +46,8 @@ static struct argp_option options[] = {
                                        {"gap_open", 'o', "INT", 0, "Gap open value", 0 },
                                        {"thres_scr", 't', "INT", 0, "Threshold score value", 0 },
                                        {"matrix",   's', "<ident|blosum62|blosum80|blosum90|vtml200>", 0, "Substitution matrix to use", 0 },
+                                       {"weight_x", 'w', "char*", 0, "positional weight for sequence x", 0},
+                                       {"weight_y", 'z', "char*", 0, "positional weight for sequence y", 0},
                                        { 0 }
 };
 
@@ -54,6 +56,7 @@ struct arguments {
   char *args[2]; char *frame;
   char *matrix; float gap_cost;
   float gap_open; float thr_scr;
+  char *weight_x; char *weight_y;
 };
 
 
@@ -70,6 +73,8 @@ error_t parse_opt (int key, char *arg, struct argp_state *state) {
     case 'o': arguments->gap_open = atof(arg); break;
     case 't': arguments->thr_scr = atof(arg); break;
     case 's': arguments->matrix = (char*)malloc(sizeof(char)*MAX_CHAR); strcpy(arguments->matrix, arg); break;
+    case 'w': arguments->weight_x = (char*)malloc(sizeof(char)*MAX_CHAR); strcpy(arguments->weight_x, arg); break;
+    case 'z': arguments->weight_y = (char*)malloc(sizeof(char)*MAX_CHAR); strcpy(arguments->weight_y, arg); break;
 
     case ARGP_KEY_ARG:
       if (state->arg_num >= 2)
