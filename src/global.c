@@ -283,6 +283,8 @@ int main(int argc, char *argv[]) {
   int* frames;
   char *seq_x, *seq_y;
   fasta_seq_p seq_x_el, seq_y_el;
+  int *weight_x, *weight_y;
+  weight_seq_p weight_x_el, weight_y_el;
   // default arguments
   arguments.frame = "-2";
   arguments.gap_cost = -3.0;
@@ -303,6 +305,13 @@ int main(int argc, char *argv[]) {
   seq_y_el = read_fasta(arguments.args[1]);
   seq_x = seq_x_el->seq;
   seq_y = seq_y_el->seq;
+
+  printf("%s\n", arguments.weight_x);
+  printf("%i\n",strlen(seq_x));
+  weight_x_el = read_weight(arguments.weight_x, strlen(seq_x));
+  weight_y_el = read_weight(arguments.weight_y, strlen(seq_y));
+  weight_x = weight_x_el->weight;
+  weight_y = weight_y_el->weight;
 
   // Read DCA scores
   if (strcmp(arguments.dca_file_x, "-") != 0 && strcmp(arguments.dca_file_y, "-") != 0) {
@@ -337,7 +346,6 @@ int main(int argc, char *argv[]) {
 
   printf("# SCORE = %.1f\n", results->result->score);
   backtrace(results, seq_x, seq_y, frames, true);
-
   free(seq_x); free(seq_y);
   free_kmer_list(KMER_LIST);
   if (DCA == true) {

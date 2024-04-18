@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include "seq_utils.h"
@@ -523,11 +523,13 @@ fasta_seq_p read_fasta(char* fasta_file_str) {
 }
 
 // read a sequence weight file
-weight_seq_p read_weights(char* weight_file_str, int len_seq) {
+weight_seq_p read_weight(char* weight_file_str, int len_seq) {
   FILE *weight_file;
-  char line[MAX_CHAR];
+  /* char line[MAX_CHAR]; */
+  char* line = (char*)malloc(sizeof(char)*MAX_CHAR);
   char* name = (char*)malloc(sizeof(char)*MAX_CHAR);
-  int* weight = (int*)malloc(sizeof(int)*MAX_NUMBERS);
+  int* weight = (int*)malloc(sizeof(int)*len_seq);
+
   int count = 0;
   weight_seq_p cur_weight = (weight_seq_p)malloc(sizeof(weight_seq));
 
@@ -540,8 +542,11 @@ weight_seq_p read_weights(char* weight_file_str, int len_seq) {
       char *token = strtok(line, " ");
       while (token != NULL) {
         weight[count++] = atoi(token);
+        // move to the next token
+        token = strtok(NULL, " ");
       }
     } else {
+      line++;
       strcpy(name, line);
       name[strcspn(name, "\n")] = 0;
     }
@@ -549,7 +554,7 @@ weight_seq_p read_weights(char* weight_file_str, int len_seq) {
   fclose(weight_file);
   if (count != len_seq) {
     printf("Error at line %d: length of weight not equal to length of sequence\n", count);
-    return 1;
+    exit(1);
   } else {
     cur_weight->name = name;
     cur_weight->weight = weight;
@@ -562,7 +567,7 @@ int rand_int(int from_int, int to_int) {
   if (from_int < to_int)
     return rand() % (to_int - from_int) + from_int;
   else
-    fprintf(stderr,"ERROR");
+    printf(stderr,"ERROR");
   exit(1);
   return 0;
 }

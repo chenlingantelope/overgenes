@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 // Global variable
 typedef enum {true, false} Bool;
@@ -143,7 +144,7 @@ int convert_matrix(char* matrix_str);
 fasta_seq_p read_fasta(char* fasta_file_str);
 
 // read a weight file
-weight_seq_p read_weight(char* weight_file_str);
+weight_seq_p read_weight(char* weight_file_str, int len_seq);
 
 // progress infos
 void printProgress (int step, int traj_len);
