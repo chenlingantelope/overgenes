@@ -162,25 +162,27 @@ float MATRIX[5][21][21] = {
 };
 
 // Functions -------------------------------------------------------------------
-float compute_score_sim_local(pair_p init, pair_p prime, int mat_type, float thr_scr) {
+float compute_score_sim_local(pair_p init, pair_p prime, int mat_type, float thr_scr, int *weight_x, int *weight_y,
+                              int pos_x, int pos_y) {
   float score_x = 0.0, score_y = 0.0;
   if (init->x != GAP)
-    score_x = MATRIX[mat_type][init->x][prime->x];
+    score_x = MATRIX[mat_type][init->x][prime->x] * weight_x[pos_x];
   if (init->y != GAP)
-    score_y = MATRIX[mat_type][init->y][prime->y];
+    score_y = MATRIX[mat_type][init->y][prime->y] * weight_y[pos_y];
   if (score_x < thr_scr || score_y < thr_scr)
     return MINF;
   else
-    return 0.5 * (score_x + score_y);
+    return 0.5 * (score_x  + score_y );
 };
 
-float compute_score_sim(pair_p init, pair_p prime, int mat_type) {
+float compute_score_sim(pair_p init, pair_p prime, int mat_type, int *weight_x, int *weight_y,
+                        int pos_x, int pos_y) {
   float score_x = 0.0, score_y = 0.0;
   if (init->x != GAP)
-    score_x = MATRIX[mat_type][init->x][prime->x];
+    score_x = MATRIX[mat_type][init->x][prime->x] * weight_x[pos_x];
   if (init->y != GAP)
-    score_y = MATRIX[mat_type][init->y][prime->y];
-  return 0.5 * (score_x + score_y);
+    score_y = MATRIX[mat_type][init->y][prime->y] * weight_y[pos_y];
+  return 0.5 * (score_x + score_y );
 };
 
 

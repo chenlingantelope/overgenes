@@ -26,6 +26,8 @@ int MAT_TYPE = 0; // Means Identity matrix:: 1=blosum62, 2=blosum80, 3=blosum90,
 quartet_p**** KMER_LIST;
 float**** dca_scores_x; // dca scores
 float**** dca_scores_y; // dca scores
+int* weight_x;
+int* weight_y;
 char amino_acids_char[] = {'A' ,'C' ,'T' ,'E' ,'D' ,'F' ,'W' ,'I' ,'V' ,'L' ,'K' ,'M' ,'N' ,'Q' ,'S' ,'R' ,'Y' ,'H' ,'P' ,'G', '*', '-'};
 char nuc_2_char[] = {'A','C','T','G'};
 
@@ -143,7 +145,8 @@ quartet_p* connect(matrix_entry_p prev_matrix, matrix_entry_p cur_matrix,
                                           dca_scores_x, dca_scores_y,
                                           cur_matrix->posx, cur_matrix->posy);
           else
-            new_score = compute_score_sim(cur_pair, tmp_kmer->prime, MAT_TYPE);
+            new_score = compute_score_sim(cur_pair, tmp_kmer->prime, MAT_TYPE,weight_x, weight_y,
+                                          cur_matrix->posx, cur_matrix->posy);
           // if previous entry is not NULL (0, 0)
           if (prev_matrix) {
             // matching i —> previous l
@@ -283,7 +286,7 @@ int main(int argc, char *argv[]) {
   int* frames;
   char *seq_x, *seq_y;
   fasta_seq_p seq_x_el, seq_y_el;
-  int *weight_x, *weight_y;
+//  int *weight_x, *weight_y;
   weight_seq_p weight_x_el, weight_y_el;
   // default arguments
   arguments.frame = "-2";
@@ -347,6 +350,7 @@ int main(int argc, char *argv[]) {
   printf("# SCORE = %.1f\n", results->result->score);
   backtrace(results, seq_x, seq_y, frames, true);
   free(seq_x); free(seq_y);
+  free(weight_x); free(weight_y);
   free_kmer_list(KMER_LIST);
   if (DCA == true) {
     free_score(dca_scores_x, matrix->len_x);

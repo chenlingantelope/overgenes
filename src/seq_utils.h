@@ -91,10 +91,12 @@ void free_kmer_list(quartet_p**** kmer_list);
 void free_matrix(matrix_qp kmer_list);
 
 // compute the similarity (blosum62) between two pairs of aa
-float compute_score_sim(pair_p init, pair_p prime, int mat_type);
+float compute_score_sim(pair_p init, pair_p prime, int mat_type, int *weight_x, int *weight_y,
+                              int pos_x, int pos_y);
 
 // compute the similarity score for local search
-float compute_score_sim_local(pair_p init, pair_p prime, int mat_type, float thr_scr);
+float compute_score_sim_local(pair_p init, pair_p prime, int mat_type, float thr_scr, int *weight_x, int *weight_y,
+                              int pos_x, int pos_y);
 
 // get the quartet that maximizes that score
 quartet_p get_max_quartet(quartet_p substitution, quartet_p deletion, quartet_p insertion);
